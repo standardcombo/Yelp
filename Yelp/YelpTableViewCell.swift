@@ -18,6 +18,7 @@ class YelpTableViewCell: UITableViewCell
     @IBOutlet weak var reviewLabel: UILabel!
     @IBOutlet weak var distanceLabel: UILabel!
     
+    
     func setData(data: NSDictionary, index: Int)
     {
 //        println(data)

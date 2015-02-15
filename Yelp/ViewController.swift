@@ -21,6 +21,8 @@ class ViewController: UITableViewController, UISearchBarDelegate
     let yelpToken = "Oxf8V9ZUljfHB01-FqKRzx0OkZfYEked"//"uRcRswHFYa1VkDrGV6LAW2F8clGh5JHV"
     let yelpTokenSecret = "lqfHcRBCKZzGVIG3r8SUou-Kvrc"//"mqtKIxMIR4iBtBPZCmCLEb-Dz3Y"
     
+    var webView: WebViewController!
+    
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
@@ -126,13 +128,23 @@ class ViewController: UITableViewController, UISearchBarDelegate
     {
         if ( !networkError )
         {
-            //            let detailsView: MovieDetailsViewController! = self.storyboard?.instantiateViewControllerWithIdentifier("detailsView") as MovieDetailsViewController
-            //
-            //            let index:Int = indexPath.row
-            //            let movie: NSDictionary = self.moviesArray?[index] as NSDictionary
-            //            detailsView.movieData = movie
-            //
-            //            self.showViewController(detailsView, sender: detailsView)
+            let index:Int = indexPath.row
+            
+            if (dataArray?.count >= index)
+            {
+                if let data: NSDictionary = self.dataArray?[index] as? NSDictionary
+                {
+                    if let urlStr = data["mobile_url"] as? String
+                    {
+                        // Web View
+                        webView = self.storyboard?.instantiateViewControllerWithIdentifier("webView") as WebViewController
+                        webView.bizUrlStr = urlStr
+                        
+                        self.showViewController(webView, sender: webView)
+                    }
+                }
+            }
+            
         }
         else {
             reload()
