@@ -11,16 +11,16 @@ import UIKit
 class YelpTableViewCell: UITableViewCell
 {
     @IBOutlet weak var mainPicture: UIImageView!
-    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var ratingImage: UIImageView!
     @IBOutlet weak var addressLabel: UILabel!
     @IBOutlet weak var genreLabel: UILabel!
     @IBOutlet weak var reviewLabel: UILabel!
     @IBOutlet weak var distanceLabel: UILabel!
     
-    func setData(data: NSDictionary)
+    func setData(data: NSDictionary, index: Int)
     {
-        println(data)
+//        println(data)
         
         if let image_url = data["image_url"] as? String
         {
@@ -30,7 +30,7 @@ class YelpTableViewCell: UITableViewCell
         
         if let name = data["name"] as? String
         {
-            nameLabel.text = name
+            titleLabel.text = "\(index). \(name)"
         }
         
         if let rating_img_url = data["rating_img_url"] as? String
@@ -90,6 +90,7 @@ class YelpTableViewCell: UITableViewCell
         {
             reviewLabel.text = "\(reviews) reviews"
         }
+        
     }
 
     override func awakeFromNib() {

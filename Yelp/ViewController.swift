@@ -8,11 +8,12 @@
 
 import UIKit
 
-class ViewController: UITableViewController
+class ViewController: UITableViewController, UISearchBarDelegate
 {
     var client: YelpClient!
     var dataArray: NSArray?
     var networkError: Bool = false
+    var searchTerm: String = ""
     
     // You can register for Yelp API keys here: http://www.yelp.com/developers/manage_api_keys
     let yelpConsumerKey = "_0ZgjQ3ruYuw213HuXaqMw"//"vxKwwcR_NMQ7WaEiQBK_CA"
@@ -34,6 +35,14 @@ class ViewController: UITableViewController
         // Do any additional setup after loading the view, typically from a nib.
         client = YelpClient(consumerKey: yelpConsumerKey, consumerSecret: yelpConsumerSecret, accessToken: yelpToken, accessSecret: yelpTokenSecret)
         
+        // Search bar
+        let searchBar = UISearchBar()
+        self.navigationItem.titleView = searchBar
+        searchBar.delegate = self
+        
+        self.tableView.rowHeight = UITableViewAutomaticDimension;
+        self.tableView.estimatedRowHeight = 90.0;
+        
         reload()
     }
     
@@ -41,7 +50,12 @@ class ViewController: UITableViewController
     {
         showActivity()
         
-        client.searchWithTerm("", success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
+        if activeOperation != nil
+        {
+            activeOperation.cancel()
+        }
+        
+        activeOperation = client.searchWithTerm(searchTerm, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
             
             self.dataArray = response["businesses"] as? NSArray
             
@@ -51,13 +65,18 @@ class ViewController: UITableViewController
             
         }) { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
             
-            println(error)
-            
-            self.networkError = true
-            self.hideActivity()
-            self.tableView.reloadData()
+            if !operation.cancelled
+            {
+                println(error)
+                
+                self.networkError = true
+                self.hideActivity()
+                self.tableView.reloadData()
+            }
         }
     }
+    
+    var activeOperation: AFHTTPRequestOperation!
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
@@ -71,7 +90,7 @@ class ViewController: UITableViewController
             
             println("\(i!) cells")
             
-            return i!;
+            return i!
         }
         println("0 cells");
         return 0
@@ -89,7 +108,8 @@ class ViewController: UITableViewController
             {
                 let data: NSDictionary = self.dataArray?[index] as NSDictionary;
                 
-                cell.setData(data)
+                cell.setData(data, index: index+1)
+                
             }
             return cell;
         }
@@ -116,20 +136,30 @@ class ViewController: UITableViewController
         }
     }
     
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String)
+    {
+        self.searchTerm = searchText
+        reload()
+    }
+    
     func showActivity()
     {
-        actInd = UIActivityIndicatorView(frame: CGRectMake(0,0, 50, 50)) as UIActivityIndicatorView
-        actInd?.center = self.view.center
-        actInd?.hidesWhenStopped = true
-        actInd?.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
-        view.addSubview(actInd!)
-        actInd?.startAnimating()
+        if actInd == nil
+        {
+            actInd = UIActivityIndicatorView(frame: CGRectMake(0,0, 50, 50)) as UIActivityIndicatorView
+            actInd?.center = self.view.center
+            actInd?.hidesWhenStopped = true
+            actInd?.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+            view.addSubview(actInd!)
+            actInd?.startAnimating()
+        }
     }
     
     func hideActivity()
     {
         actInd?.stopAnimating()
         actInd?.removeFromSuperview()
+        actInd = nil
     }
     
     var actInd: UIActivityIndicatorView?
