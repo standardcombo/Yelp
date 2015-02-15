@@ -11,6 +11,9 @@ import UIKit
 class FilterViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate
 {
     @IBOutlet weak var categoryPicker: UIPickerView!
+    @IBOutlet weak var distanceSlider: UISlider!
+    @IBOutlet weak var distanceLabel: UILabel!
+    @IBOutlet weak var dealsSwitch: UISwitch!
     
     let categoryStrings = ["Everything", "Restaurants", "Bars", "Coffee & Tea", "Delivery", "Nightlife", "Gas & Vehicle", "Drugstores", "Shopping"]
     let categoryData = ["", "restaurants", "bars", "coffee", "couriers", "nightlife", "servicestations", "drugstores", "shopping"]
@@ -38,6 +41,10 @@ class FilterViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         
         categoryPicker.selectRow(categoryIndex, inComponent: 0, animated: false)
         categoryPicker.selectRow(filter.sort, inComponent: 1, animated: false)
+        
+        setDistanceWithMeters(filter.radius_filter)
+        
+        dealsSwitch.on = filter.deals_filter
     }
     
     @IBAction func searchPressed(sender: AnyObject)
@@ -90,6 +97,42 @@ class FilterViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
             // Sort
             filter.sort = row
         }
+    }
+    
+// Distance
+    
+    @IBAction func distanceValueChanged(sender: AnyObject)
+    {
+        let miles = self.distanceSlider.value
+        var meters = Int(miles * 1609.34)
+        
+        if meters > 40000
+        {
+            meters = 40000
+        }
+        filter.radius_filter = meters
+        
+        setDistanceWithMiles(miles)
+    }
+    
+    func setDistanceWithMeters(meters: Int)
+    {
+        let miles = Float(meters) / 1609.34
+        setDistanceWithMiles(miles)
+        
+        self.distanceSlider.value = miles
+    }
+    
+    func setDistanceWithMiles(miles: Float)
+    {
+        distanceLabel.text = String(format: "%.1f mi", miles)
+    }
+    
+// Deals
+    
+    @IBAction func dealsSwitchChanged(sender: AnyObject)
+    {
+        filter.deals_filter = dealsSwitch.on
     }
     
 // Title
