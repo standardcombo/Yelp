@@ -1,7 +1,7 @@
 # Yelp
 Yelp assignment for Codepath
 
-Time spent: 9 hours
+Time spent: 10 hours
 
 Completed user stories:
 
