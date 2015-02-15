@@ -40,6 +40,7 @@ class ViewController: UITableViewController, UISearchBarDelegate
         self.navigationItem.titleView = searchBar
         searchBar.delegate = self
         
+        // Resize rows
         self.tableView.rowHeight = UITableViewAutomaticDimension;
         self.tableView.estimatedRowHeight = 90.0;
         
