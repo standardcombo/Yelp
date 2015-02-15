@@ -14,3 +14,5 @@ Completed user stories:
 * [x] Required: Filters are organized into categories
 * [x] Optional: A filter class encapsulates the filter data to be passed around
 * [x] Optional: Pressing on a business opens a webview with details
+
+![Video Walkthrough](yelp.gif)
