@@ -49,6 +49,8 @@ class ViewController: UITableViewController, UISearchBarDelegate
     
     func reload()
     {
+        println("Reloading")
+        
         showActivity()
         
         if activeOperation != nil
@@ -141,6 +143,15 @@ class ViewController: UITableViewController, UISearchBarDelegate
     {
         self.searchTerm = searchText
         reload()
+    }
+    
+    @IBAction func filterPressed(sender: AnyObject)
+    {
+        let filterView: FilterViewController! = self.storyboard?.instantiateViewControllerWithIdentifier("filterView") as FilterViewController
+        
+        filterView.filter = client.filter
+        
+        self.showViewController(filterView, sender: filterView)
     }
     
     func showActivity()

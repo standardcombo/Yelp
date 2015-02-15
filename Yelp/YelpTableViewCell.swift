@@ -52,7 +52,7 @@ class YelpTableViewCell: UITableViewCell
                 {
                     if let longitude = coordinate["longitude"] as? Float
                     {
-                        println("coord: \(latitude),\(longitude)")
+//                        println("coord: \(latitude),\(longitude)")
                         
                         let geoLoc = GeoCoordinate(latitude: latitude, longitude: longitude)
                         let code_path_boot_camp_geo_location = GeoCoordinate(latitude: 37.770706, longitude: -122.403511)
